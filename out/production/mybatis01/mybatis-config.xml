@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--1.properties标签
+        resource属性：引入类路径下的配置文件
+        url属性：引入磁盘或网络上的配置
+    -->
+    <properties resource="db.properties">
+        <property name="password" value="root2"/>
+    </properties>
+
+    <!--★2.settings标签-->
+    <settings>
+        <!--开启驼峰命名自动映射功能-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <!--
+                value值加载的顺序：
+                1.首先读取properties中property指定的值
+                2.加载外部属性文件中的值（如果引入的外部属性文件中指定的key与第1步中一致，则覆盖第1步中的值）
+                3.最后如果都加载不到则使用当前property标签中指定的${password}作为值
+            -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--注册Mapper映射文件（sql映射文件）-->
+    <mappers>
+        <mapper resource="com/atguigu/mybatis/mapper/EmployeeMapper.xml"/>
+        <mapper resource="com/atguigu/mybatis/mapper/DepartmentMapper.xml"></mapper>
+    </mappers>
+
+</configuration>

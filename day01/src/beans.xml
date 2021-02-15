@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       https://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<bean id="book" class="com.atguigu.spring.Book">
+    <constructor-arg value="2"></constructor-arg>
+    <constructor-arg index="2" value="楼观镇"></constructor-arg>
+    <constructor-arg index="1" value="whh"></constructor-arg>
+    <constructor-arg name="price" value="2"></constructor-arg>
+
+</bean>
+    <bean id="book2" class="com.atguigu.spring.Book"
+          p:id="2"
+          p:author="兰陵笑笑生" ></bean>
+    <bean id="cartItem1" class="com.atguigu.spring.CartItem">
+        <property name="book" ref="book2"></property>
+        <property name="count" value="23"></property>
+        <property name="amount" value="2322"></property>
+    </bean>
+
+    <util:list id="listBean">
+        <bean class="com.atguigu.spring.Book">
+            <property name="id" value="1"></property>
+            <property name="title" value="大秦帝国之裂变"></property>
+            <property name="author" value="孙皓晖"></property>
+        </bean>
+        <bean class="com.atguigu.spring.Book">
+            <property name="id" value="2"></property>
+            <property name="title" value="大秦帝国之纵横"></property>
+            <property name="author" value="孙皓晖"></property>
+        </bean>
+        <bean class="com.atguigu.spring.Book">
+            <property name="id" value="3"></property>
+            <property name="title" value="大秦帝国之崛起"></property>
+            <property name="author" value="孙皓晖"></property>
+        </bean>
+        <ref bean="book"></ref>
+
+    </util:list>
+
+    <bean id="list" class="com.atguigu.spring.BookShop">
+        <property name="list" ref="listBean"></property>
+    </bean>
+    <context:property-placeholder
+        location="classpath:druid.properties"></context:property-placeholder>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="initialSize" value="${jdbc.initialSize}"></property>
+        <property name="maxActive" value="${jdbc.maxActive}"></property>
+    </bean>
+</beans>

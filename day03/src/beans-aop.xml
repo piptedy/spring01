@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+<!--<context:component-scan base-package="com.atguigu.spring.aop"></context:component-scan>-->
+<!--    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
+<!--    配置实现类-->
+    <bean id="caculator" class="com.atguigu.spring.aop.beans2.CaculatorImpl"></bean>
+<!--    配置切面类-->
+    <bean id="logginAspect" class="com.atguigu.spring.aop.aspect.LogginAspect"></bean>
+<!--    配置AOP-->
+    <aop:config>
+        <aop:pointcut id="pointCut" expression="execution(* com.atguigu.spring.aop.beans2.Caculator.*(..))"/>
+        <aop:aspect ref="logginAspect">
+<!--            前置通知-->
+            <aop:before method="beforeAdvice" pointcut-ref="pointCut"></aop:before>
+            <aop:after-returning method="afterReturningAdvice" pointcut-ref="pointCut" returning="result"></aop:after-returning>
+            <aop:after method="afterAdvice" pointcut-ref="pointCut"></aop:after>
+            <aop:after-throwing method="throwingAdivce" pointcut-ref="pointCut" throwing="e"></aop:after-throwing>
+            <aop:around method="aroundAdivce" pointcut-ref="pointCut"></aop:around>
+
+        </aop:aspect>
+    </aop:config>
+</beans>

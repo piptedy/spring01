@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace属性：设置为接口的全类名-->
+<mapper namespace="com.atguigu.mybatis.mapper.EmployeeMapper">
+
+    <!--
+        id属性：设置为接口中的方法名
+        resultType属性：设置为方法的返回值的类型的全类名
+    -->
+    <select id="getEmployeeById" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where id = #{id}
+    </select>
+    <select id="getEmployeeByDeptid" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where dept_id = #{id}
+    </select>
+    <insert id="addEmployee">
+        insert into employees(last_name,email,salary,dept_id)
+        values(#{lastName},#{email},#{salary},#{deptId})
+    </insert>
+    <update id="updateEmployee">
+        update employees
+        set(last_name=#{lastName},email=#{email},salary=#{salary},dept_id=#{deptId})
+        where id = #{id}
+    </update>
+    <select id="selectAll" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+    </select>
+    <delete id="deleteById">
+        delete from employees
+        where id = #{id}
+    </delete>
+    <select id="getEmployeeByIdAndName" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where id=#{arg0} and last_name=#{arg1}
+    </select>
+    <!--联合查询-->
+    <select id="getEmployeeAndDeptById" resultMap="myResult">
+        SELECT e.*,d.`id`d_id,d.`name` d_name
+        FROM `employees` e
+        LEFT JOIN `departments` d
+        ON e.`dept_id`=d.`id`
+        WHERE e.`id` = #{id}
+    </select>
+
+    <resultMap id="myResult" type="com.atguigu.mybatis.entities.Employee">
+        <id property="id" column="id"></id>
+        <result property="lastName" column="last_name"></result>
+        <result property="email" column="email"></result>
+        <result property="salary" column="salary"></result>
+
+        <!--通过association标签给部门属性赋值
+        property属性：指定Employee中部门的属性名
+        javaType属性：指定属性的类型
+    -->
+        <association property="dept" javaType="com.atguigu.mybatis.entities.Department">
+            <id property="id" column="d_id"></id>
+            <result property="name" column="d_name"></result>
+        </association>
+    </resultMap>
+<!--    分步查询-->
+    <select id="getEmployeeAndDeptById2" resultMap="myEmp">
+        select id,last_name,email,salary,dept_id
+        from employees
+        where id=#{id}
+    </select>
+<!--    自定义高级映射结果集-->
+    <resultMap id="myEmp" type="com.atguigu.mybatis.entities.Employee">
+        <id column="id" property="id"></id>
+        <result column="last_name" property="lastName"></result>
+        <result property="email" column="email"></result>
+        <result property="salary" column="salary"></result>
+        <!--通过association标签分步查询给部门属性赋值
+        property属性：指定Employee中部门的属性名
+        select属性：指定调用那个接口的那个方法查询部门信息
+        column属性：指定将那个字段的值传入到select中调用的方法中
+    -->
+        <association property="dept" select="com.atguigu.mybatis.mapper.DepartmentMapper.getDepartmentById" column="dept_id"></association>
+    </resultMap>
+</mapper>

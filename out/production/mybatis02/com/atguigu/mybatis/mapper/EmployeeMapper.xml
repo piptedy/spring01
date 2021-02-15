@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace属性：设置为接口的全类名-->
+<mapper namespace="com.atguigu.mybatis.mapper.EmployeeMapper">
+
+    <!--
+        id属性：设置为接口中的方法名
+        resultType属性：设置为方法的返回值的类型的全类名
+    -->
+    <select id="getEmployeeById" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where id = #{id}
+    </select>
+    <insert id="addEmployee">
+        insert into employees(last_name,email,salary,dept_id)
+        values(#{lastName},#{email},#{salary},#{deptId})
+    </insert>
+    <update id="updateEmployee">
+        update employees
+        set(last_name=#{lastName},email=#{email},salary=#{salary},dept_id=#{deptId})
+        where id = #{id}
+    </update>
+    <select id="selectAll" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+    </select>
+    <delete id="deleteById">
+        delete from employees
+        where id = #{id}
+    </delete>
+    <select id="getEmployeeByIdAndName" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where id=#{id} and last_name=#{userName}
+    </select>
+    <select id="getEmployeeReturnMap" resultType="map">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where id = #{id}
+    </select>
+    <select id="getEmployeesReturnMap" resultType="map">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+    </select>
+    <select id="getEmployeeByEmailAndName" resultType="com.atguigu.mybatis.entities.Employee">
+        select id,last_name lastName,email,salary,dept_id deptId
+        from employees
+        where last_name=#{ln} and email=#{em}
+    </select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace属性：设置为接口的全类名-->
+<mapper namespace="com.atguigu.ssm.mapper.EmployeeMapper">
+
+    <select id="getEmployeeById" resultType="com.atguigu.ssm.entities.Employee">
+        SELECT id,last_name,email,gender,dept_id FROM employees WHERE id = #{id};
+    </select>
+<!--    查询所有员工及部门信息-->
+    <select id="getEmployees" resultMap="myEmp">
+        SELECT e.*,d.`id` d_id,d.`name` d_name
+        FROM employees e
+        LEFT JOIN departments d
+        ON e.`dept_id`=d.`id`
+    </select>
+    <resultMap id="myEmp" type="com.atguigu.ssm.entities.Employee">
+        <id property="id" column="id"></id>
+        <result property="lastName" column="last_name"></result>
+        <result property="email" column="email"></result>
+        <result property="gender" column="gender"></result>
+        <association property="dept" javaType="com.atguigu.ssm.entities.Department">
+            <id property="id" column="d_id"></id>
+            <result property="name" column="d_name"></result>
+        </association>
+    </resultMap>
+
+    <select id="getDepartments" resultType="com.atguigu.ssm.entities.Department">
+        SELECT id,NAME
+        FROM departments
+    </select>
+    <select id="addEmployee">
+        insert into employees(last_name,email,gender,dept_id) values(#{lastName},#{email},#{gender},#{dept.id})
+    </select>
+    <select id="updateEmployee">
+        update employees
+        set last_name=#{lastName},email=#{email},gender=#{gender},dept_id=#{dept.id}
+        where id=#{id}
+    </select>
+    <select id="deleteEmployee">
+        delete from employees where id=#{id}
+    </select>
+
+</mapper>

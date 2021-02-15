@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace属性：设置为接口的全类名-->
+<mapper namespace="com.atguigu.mybatis.mapper.DepartmentMapper">
+    <select id="getDepartmentById" resultType="com.atguigu.mybatis.entities.Department">
+        SELECT id,NAME FROM departments WHERE id =#{id}
+    </select>
+<!--    级联查询-->
+    <select id="getDepartmentAndEmpsById" resultMap="myResult">
+        SELECT d.`id`,d.`name`,e.*
+        FROM departments d
+        LEFT JOIN employees e
+        ON d.`id`=e.`dept_id`
+        WHERE d.`id`=#{id};
+    </select>
+<!--    自定义高级映射-->
+    <resultMap id="myResult" type="com.atguigu.mybatis.entities.Department">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <collection property="employees" ofType="com.atguigu.mybatis.entities.Employee">
+            <id column="id" property="id"></id>
+            <result property="lastName" column="last_name"></result>
+            <result property="email" column="email"></result>
+            <result property="salary" column="salary"></result>
+        </collection>
+
+    </resultMap>
+    <!--        department的分步查询-->
+    <!--        1.按部门id查department的各个字段
+                2.按部门id作为员工表的外键查员工信息
+                3.将所有员工设置到部门中-->
+    <select id="getDepartmentAndEmpsByStep" resultMap="myMap">
+        SELECT id,NAME FROM departments WHERE id =#{id}
+    </select>
+    <resultMap id="myMap" type="com.atguigu.mybatis.entities.Department">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <!--
+       property属性：集合属性的属性名
+       select属性：调用那个接口的那个方法查询员工信息
+       column属性：将那个字段的值传入到select属性调用的方法中
+   -->
+        <collection property="employees" select="com.atguigu.mybatis.mapper.EmployeeMapper.getEmployeeByDeptid" column="id"></collection>
+    </resultMap>
+</mapper>
